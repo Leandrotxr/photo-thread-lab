@@ -17,6 +17,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -25,8 +27,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -34,6 +36,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -62,6 +65,9 @@ public class MainView extends Application {
     private Baseline baseline;
 
     private final ImageView imageView = new ImageView();
+    private final Label placeholder = new Label("Gere uma imagem de teste ou abra uma foto");
+    private final StackPane canvas = new StackPane();
+    private final ProgressBar progressBar = new ProgressBar(0);
     private final Label statusLabel = new Label("Gere uma imagem de teste ou abra uma foto para comecar.");
     private final Label timeLabel = new Label("Tempo: —");
     private final Label speedupLabel = new Label("Speedup: —");
@@ -120,7 +126,9 @@ public class MainView extends Application {
         delaySlider.setSnapToTicks(true);
         delaySlider.setShowTickMarks(true);
         delayValue.textProperty().bind(delaySlider.valueProperty().asString("Atraso visual: %.0f ms"));
-        legend.setPrefWrapLength(260);
+        threadValue.getStyleClass().add("field-label");
+        radiusValue.getStyleClass().add("field-label");
+        delayValue.getStyleClass().add("field-label");
 
         stopButton.setDisable(true);
         renderButton.setDisable(true);
@@ -134,6 +142,22 @@ public class MainView extends Application {
         tileSizeBox.setMaxWidth(Double.MAX_VALUE);
         strategyBox.setMaxWidth(Double.MAX_VALUE);
 
+        openButton.getStyleClass().add("btn-secondary");
+        testButton.getStyleClass().add("btn-secondary");
+        renderButton.getStyleClass().add("btn-primary");
+        stopButton.getStyleClass().add("btn-danger");
+        benchmarkButton.getStyleClass().add("btn-ghost");
+        coresLabel.getStyleClass().add("subtitle");
+        timeLabel.getStyleClass().add("metric");
+        speedupLabel.getStyleClass().add("metric");
+        efficiencyLabel.getStyleClass().add("metric");
+        progressLabel.getStyleClass().add("metric");
+        activityLabel.getStyleClass().add("activity");
+        statusLabel.getStyleClass().add("status-bar");
+        placeholder.getStyleClass().add("placeholder");
+        progressBar.setMaxWidth(Double.MAX_VALUE);
+        progressBar.setProgress(0);
+
         NumberAxis xAxis = new NumberAxis(0, 68, 8);
         xAxis.setLabel("Threads");
         NumberAxis yAxis = new NumberAxis();
@@ -142,66 +166,50 @@ public class MainView extends Application {
         chart.setTitle("Tempo x threads");
         chart.setAnimated(false);
         chart.setLegendVisible(false);
-        chart.setPrefHeight(240);
+        chart.setPrefHeight(190);
         chart.setCreateSymbols(true);
         chartSeries.setName("ms");
         chart.getData().add(chartSeries);
 
         VBox controls = new VBox(
-                10,
+                14,
                 title("Photo Thread Lab"),
                 coresLabel,
-                new Separator(),
-                openButton,
-                testButton,
-                new Separator(),
-                threadValue,
-                threadSlider,
-                labeled("Tamanho do tile"),
-                tileSizeBox,
-                radiusValue,
-                radiusSlider,
-                labeled("Estrategia"),
-                strategyBox,
-                highlightBox,
-                delayValue,
-                delaySlider,
-                labeled("Legenda das threads"),
-                legend,
+                section("IMAGEM", openButton, testButton),
+                section("PARALELISMO", threadValue, threadSlider, labeled("Tamanho do tile"), tileSizeBox,
+                        labeled("Estrategia"), strategyBox),
+                section("BLUR E VISUAL", radiusValue, radiusSlider, highlightBox, delayValue, delaySlider,
+                        labeled("Legenda das threads"), legend),
                 renderButton,
                 stopButton,
                 benchmarkButton,
-                new Separator(),
-                timeLabel,
-                speedupLabel,
-                efficiencyLabel,
-                progressLabel,
-                activityLabel,
-                new Separator(),
+                section("METRICAS", progressBar, timeLabel, speedupLabel, efficiencyLabel, progressLabel, activityLabel),
                 chart
         );
-        controls.setPadding(new Insets(16));
-        controls.setPrefWidth(300);
+        controls.getStyleClass().add("sidebar");
+        controls.setPrefWidth(292);
         ScrollPane controlScroll = new ScrollPane(controls);
         controlScroll.setFitToWidth(true);
         controlScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        controlScroll.setPrefWidth(320);
+        controlScroll.setPrefWidth(312);
+        controlScroll.getStyleClass().add("sidebar-scroll");
 
         imageView.setPreserveRatio(true);
         imageView.setSmooth(false);
-        ScrollPane scroll = new ScrollPane(imageView);
-        scroll.setFitToWidth(true);
-        scroll.setFitToHeight(true);
-        scroll.setStyle("-fx-background: #10131a; -fx-background-color: #10131a;");
-        scroll.viewportBoundsProperty().addListener((obs, oldBounds, bounds) ->
-                imageView.setFitWidth(Math.max(480, bounds.getWidth() - 8)));
-        HBox.setHgrow(scroll, Priority.ALWAYS);
-
-        statusLabel.setPadding(new Insets(8, 16, 8, 16));
+        imageView.setVisible(false);
+        canvas.getChildren().addAll(placeholder, imageView);
+        canvas.getStyleClass().add("canvas");
+        StackPane.setAlignment(imageView, Pos.CENTER);
+        StackPane.setAlignment(placeholder, Pos.CENTER);
+        imageView.fitWidthProperty().bind(canvas.widthProperty().subtract(28));
+        imageView.fitHeightProperty().bind(canvas.heightProperty().subtract(28));
+        BorderPane.setMargin(canvas, new Insets(16, 16, 8, 8));
+        HBox.setHgrow(canvas, Priority.ALWAYS);
+        VBox.setVgrow(canvas, Priority.ALWAYS);
 
         BorderPane root = new BorderPane();
         root.setLeft(controlScroll);
-        root.setCenter(scroll);
+        root.setCenter(canvas);
         root.setBottom(statusLabel);
 
         openButton.setOnAction(e -> openPhoto(stage));
@@ -218,6 +226,7 @@ public class MainView extends Application {
                 refreshPreview(busy, done);
                 if (total > 0 && busy) {
                     progressLabel.setText("Tiles: " + done + " / " + total);
+                    progressBar.setProgress(done / (double) total);
                     String event = lastEvent.get();
                     if (event != null && !event.isBlank()) {
                         activityLabel.setText(event);
@@ -229,9 +238,14 @@ public class MainView extends Application {
         rebuildLegend((int) Math.round(threadSlider.getValue()));
 
         stage.setTitle("Photo Thread Lab");
-        stage.setScene(new Scene(root, 1020, 640));
-        stage.setMinWidth(880);
-        stage.setMinHeight(560);
+        Scene scene = new Scene(root, 1060, 680);
+        var css = MainView.class.getResource("/app.css");
+        if (css != null) {
+            scene.getStylesheets().add(css.toExternalForm());
+        }
+        stage.setScene(scene);
+        stage.setMinWidth(920);
+        stage.setMinHeight(600);
         stage.setOnCloseRequest(e -> {
             cancel.set(true);
             if (previewTimer != null) {
@@ -267,6 +281,9 @@ public class MainView extends Application {
         working = buffer.copy();
         previewImage = new WritableImage(buffer.width(), buffer.height());
         imageView.setImage(previewImage);
+        imageView.setVisible(true);
+        placeholder.setVisible(false);
+        progressBar.setProgress(0);
         baseline = null;
         chartSeries.getData().clear();
         lastPreviewCount = -1;
@@ -391,6 +408,7 @@ public class MainView extends Application {
     private void showResult(RunResult result, JobSettings settings, boolean fromBenchmark) {
         refreshPreview(true, result.tilesCompleted());
         progressLabel.setText("Tiles: " + result.tilesCompleted() + " / " + result.tileCount());
+        progressBar.setProgress(result.tileCount() == 0 ? 0 : result.tilesCompleted() / (double) result.tileCount());
         activityLabel.setText(result.cancelled() ? "Cancelado." : "Concluido.");
         if (result.cancelled()) {
             timeLabel.setText("Tempo: " + result.elapsedMs() + " ms (cancelado)");
@@ -487,14 +505,24 @@ public class MainView extends Application {
 
     private static Label title(String text) {
         Label label = new Label(text);
-        label.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        label.getStyleClass().add("brand");
         return label;
     }
 
     private static Label labeled(String text) {
         Label label = new Label(text);
-        label.setStyle("-fx-text-fill: #444444;");
+        label.getStyleClass().add("field-label");
         return label;
+    }
+
+    private static VBox section(String name, Node... children) {
+        Label heading = new Label(name);
+        heading.getStyleClass().add("section-title");
+        VBox box = new VBox(8);
+        box.getStyleClass().add("section");
+        box.getChildren().add(heading);
+        box.getChildren().addAll(children);
+        return box;
     }
 
     private void rebuildLegend(int threadCount) {
@@ -503,9 +531,13 @@ public class MainView extends Application {
         for (int i = 0; i < shown; i++) {
             int argb = ThreadPalette.color(i);
             Rectangle swatch = new Rectangle(12, 12, Color.rgb((argb >> 16) & 0xFF, (argb >> 8) & 0xFF, argb & 0xFF));
+            swatch.setArcWidth(6);
+            swatch.setArcHeight(6);
             Label name = new Label("T" + i);
-            name.setStyle("-fx-font-size: 11px;");
-            HBox item = new HBox(4, swatch, name);
+            name.getStyleClass().add("legend-name");
+            HBox item = new HBox(6, swatch, name);
+            item.setAlignment(Pos.CENTER_LEFT);
+            item.getStyleClass().add("legend-chip");
             legend.getChildren().add(item);
         }
         if (threadCount > shown) {

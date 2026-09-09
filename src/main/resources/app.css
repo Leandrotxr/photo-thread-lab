@@ -1,0 +1,243 @@
+.root {
+    -fx-font-family: "Segoe UI", "Inter", "SF Pro Text", sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #0f172a;
+    -fx-text-fill: #e5e7eb;
+    -fx-base: #1e293b;
+    -fx-accent: #38bdf8;
+    -fx-focus-color: #38bdf8;
+    -fx-faint-focus-color: transparent;
+}
+
+.sidebar {
+    -fx-background-color: #111827;
+    -fx-border-color: #1f2937;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 18 16 24 16;
+}
+
+.brand {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f8fafc;
+}
+
+.subtitle {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+
+.section-title {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748b;
+    -fx-letter-spacing: 0.6px;
+}
+
+.section {
+    -fx-padding: 4 0 8 0;
+}
+
+.field-label {
+    -fx-text-fill: #cbd5e1;
+}
+
+.canvas {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 16;
+    -fx-border-color: #334155;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+}
+
+.placeholder {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 14px;
+}
+
+.status-bar {
+    -fx-background-color: #0b1220;
+    -fx-text-fill: #cbd5e1;
+    -fx-padding: 10 18 10 18;
+    -fx-border-color: #1f2937;
+    -fx-border-width: 1 0 0 0;
+}
+
+.metric {
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 13px;
+}
+
+.activity {
+    -fx-text-fill: #7dd3fc;
+    -fx-font-size: 12px;
+}
+
+.button {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 12;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.btn-secondary {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: #e2e8f0;
+    -fx-border-color: #334155;
+    -fx-border-width: 1;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #334155;
+}
+
+.btn-primary {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: #082f49;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #38bdf8;
+}
+
+.btn-primary:disabled {
+    -fx-opacity: 0.45;
+}
+
+.btn-danger {
+    -fx-background-color: #7f1d1d;
+    -fx-text-fill: #fecaca;
+    -fx-border-color: #991b1b;
+}
+
+.btn-ghost {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5e1;
+    -fx-border-color: #334155;
+}
+
+.combo-box {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 8;
+    -fx-border-color: #334155;
+    -fx-border-radius: 8;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #e2e8f0;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #1e293b;
+    -fx-border-color: #334155;
+}
+
+.combo-box-popup .list-cell:hover,
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: #082f49;
+}
+
+.slider .track {
+    -fx-background-color: #334155;
+    -fx-background-radius: 4;
+    -fx-pref-height: 6;
+}
+
+.slider .thumb {
+    -fx-background-color: #38bdf8;
+    -fx-background-radius: 8;
+}
+
+.check-box {
+    -fx-text-fill: #e2e8f0;
+}
+
+.check-box .box {
+    -fx-background-color: #1e293b;
+    -fx-border-color: #64748b;
+    -fx-background-radius: 4;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #38bdf8;
+}
+
+.separator *.line {
+    -fx-border-color: #1f2937;
+    -fx-border-width: 1 0 0 0;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #334155;
+    -fx-background-radius: 6;
+}
+
+.chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.chart-plot-background {
+    -fx-background-color: #0b1220;
+}
+
+.chart-title {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 12px;
+}
+
+.axis {
+    -fx-tick-label-fill: #94a3b8;
+}
+
+.axis-label {
+    -fx-text-fill: #94a3b8;
+}
+
+.chart-series-line {
+    -fx-stroke: #38bdf8;
+    -fx-stroke-width: 2;
+}
+
+.chart-line-symbol {
+    -fx-background-color: #38bdf8, #0f172a;
+}
+
+.progress-bar {
+    -fx-pref-height: 8;
+}
+
+.progress-bar .track {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 6;
+}
+
+.progress-bar .bar {
+    -fx-background-color: #38bdf8;
+    -fx-background-radius: 6;
+    -fx-background-insets: 0;
+}
+
+.legend-chip {
+    -fx-alignment: CENTER_LEFT;
+}
+
+.legend-name {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 11px;
+}
